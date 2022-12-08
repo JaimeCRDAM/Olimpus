@@ -5,6 +5,7 @@ part 'God.g.dart';
 
 @JsonSerializable()
 class God implements User{
+  @override
   String? name;
   String? password;
   late String avatar;

@@ -5,7 +5,8 @@ part 'Human.g.dart';
 
 @JsonSerializable()
 class Human implements User{
-  String? name;
+  @override
+  late String? name;
   String? password;
   @override
   late String? email;

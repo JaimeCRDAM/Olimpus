@@ -51,6 +51,9 @@ class _HomePageState extends State<HomePage> {
                   hintText: "Password"
               ),
               textAlign: TextAlign.center,
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -73,7 +76,10 @@ class _HomePageState extends State<HomePage> {
                     var tempPass = "p";
                     User user = tempMail.contains("@") ? Human(null, tempMail, tempPass) : God(tempMail, tempPass);
                     Globals.currentUser = await _userServiceImpl.loginUser(user);
-                    if(Globals.currentUser == null) return;
+                    if(Globals.currentUser == null) {
+                      Globals.showSnackBar("Invalid data", context);
+                    }
+                    Globals.showSnackBar("Welcome ${Globals.currentUser?.name}", context);
                     return;
                   },
                   child: const Text("Login",

@@ -1,4 +1,5 @@
 class User {
+  late String? name;
   late String? email;
   late String jwt;
   late String type;
