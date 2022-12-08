@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../models/Const.dart';
 
@@ -35,8 +36,13 @@ class _MainPageState extends State<MainPage> {
               padding: EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const <Widget>[
-                  Icon(Icons.account_box),
+                children: <Widget>[
+                  IconButton(
+                    onPressed: () {
+                      context.push('/userpage');
+                    },
+                    icon: const Icon(Icons.account_box),
+                  ),
                 ],
               ),
             ),

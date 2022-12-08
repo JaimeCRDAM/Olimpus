@@ -5,6 +5,7 @@ class User {
   late String type;
 
 
+
   Map<String, dynamic>? toJsonAuth(){}
   Map<String, dynamic>? toJsonLogin(){}
 }

@@ -7,7 +7,10 @@ class Globals{
 
   static void showSnackBar(String text, BuildContext context){
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(text),
+      content: Text(
+        text,
+        textAlign: TextAlign.center,
+      ),
     ));
   }
 }

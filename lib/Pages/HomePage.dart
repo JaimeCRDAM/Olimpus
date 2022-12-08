@@ -34,8 +34,10 @@ class _HomePageState extends State<HomePage> {
     var tempMail = "Jedediah Thompson";
     var tempPass = "p";
     User user = tempMail.contains("@") ? Human(null, tempMail, tempPass) : God(tempMail, tempPass);
-    _userServiceImpl.loginUser(user).then((value) => Globals.currentUser = value);
-    context.replace("/mainpage");
+    _userServiceImpl.loginUser(user).then((value) {
+      Globals.currentUser = value;
+      context.replace("/mainpage");
+    });
   }
 
   @override
