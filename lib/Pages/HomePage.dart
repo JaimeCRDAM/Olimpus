@@ -27,6 +27,15 @@ class _HomePageState extends State<HomePage> {
     _password = TextEditingController();
     _userServiceImpl = UserServiceImpl();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => selfLogin());
+  }
+
+  void selfLogin(){
+    var tempMail = "Jedediah Thompson";
+    var tempPass = "p";
+    User user = tempMail.contains("@") ? Human(null, tempMail, tempPass) : God(tempMail, tempPass);
+    _userServiceImpl.loginUser(user).then((value) => Globals.currentUser = value);
+    context.replace("/mainpage");
   }
 
   @override
@@ -70,17 +79,13 @@ class _HomePageState extends State<HomePage> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    //var tempMail = "qaq@email.com";
-                    var tempMail = "Jedediah Thompson";
-                    //var tempPass = "qqqqqqqq";
-                    var tempPass = "p";
-                    User user = tempMail.contains("@") ? Human(null, tempMail, tempPass) : God(tempMail, tempPass);
+                    User user = _email.text.contains("@") ? Human(null, _email.text, _password.text) : God(_email.text, _password.text);
                     Globals.currentUser = await _userServiceImpl.loginUser(user);
                     if(Globals.currentUser == null) {
                       Globals.showSnackBar("Invalid data", context);
+                      return;
                     }
-                    Globals.showSnackBar("Welcome ${Globals.currentUser?.name}", context);
-                    return;
+                    context.replace("/mainpage");
                   },
                   child: const Text("Login",
                       style: TextStyle(

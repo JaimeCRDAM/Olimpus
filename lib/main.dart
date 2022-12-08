@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'Pages/HomePage.dart';
+import 'Pages/MainPage.dart';
 import 'Pages/SignUp.dart';
 
 void main() {
@@ -31,6 +32,12 @@ class MyApp extends StatelessWidget {
                 path: 'signup',
                 builder: (BuildContext context, GoRouterState state) {
                   return const SignUpPage();
+                },
+              ),
+              GoRoute(
+                path: 'mainpage',
+                builder: (BuildContext context, GoRouterState state) {
+                  return const MainPage();
                 },
               ),
             ],
