@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../models/Const.dart';
+import '../models/users/humans/Human.dart';
+import '../services/UserServiceImpl.dart';
+
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
@@ -13,12 +17,14 @@ class SignUp extends State<SignUpPage> {
   late final TextEditingController _email;
   late final TextEditingController _username;
   late final TextEditingController _password;
+  late final UserServiceImpl _userServiceImpl;
 
   @override
   void initState() {
     _email = TextEditingController();
     _username = TextEditingController();
     _password = TextEditingController();
+    _userServiceImpl = UserServiceImpl();
     super.initState();
   }
 
@@ -34,7 +40,7 @@ class SignUp extends State<SignUpPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextField(
-              controller: _password,
+              controller: _email,
               decoration: const InputDecoration(
                   hintText: "Email"
               ),
@@ -53,10 +59,19 @@ class SignUp extends State<SignUpPage> {
                   hintText: "Password"
               ),
               textAlign: TextAlign.center,
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
             ),
             TextButton(
               onPressed: () async {
-                    (){};
+                Human human = Human(_username.text, _email.text, _password.text);
+                Globals.currentUser = await _userServiceImpl.registerHuman(human);
+                if(Globals.currentUser == null) {
+                  Globals.showSnackBar("Invalid data", context);
+                }
+                Globals.showSnackBar("Welcome ${Globals.currentUser?.name}", context);
+                return;
               },
               child: const Text("Register",
                   style: TextStyle(
@@ -68,3 +83,4 @@ class SignUp extends State<SignUpPage> {
     );
   }
 }
+
