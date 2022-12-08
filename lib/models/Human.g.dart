@@ -6,11 +6,13 @@ part of 'Human.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Human _$HumanFromJson(Map<String, dynamic> json) => Human(
-      json['name'] as String,
-      json['password'] as String,
-      json['email'] as String,
-    );
+Human _$HumanFromJson(Map<String, dynamic> json) =>
+    Human.fromHuman(
+        Human(
+          json['name'] as String,
+          json['email'] as String,
+          null
+    ), json['jwt']);
 
 Map<String, dynamic> _$HumanToJson(Human instance) => <String, dynamic>{
       'name': instance.name,
