@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
+import 'Pages/SignUp.dart';
+
 void main() {
   runApp( const MyApp());
 }
@@ -17,6 +19,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: const HomePage(),
+      routes: <String, WidgetBuilder>{
+        '/signup': (BuildContext context) => const SignUpPage(),
+      },
     );
   }
 }
@@ -68,7 +73,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               TextButton(
                 onPressed: () async {
-                  print("a");
+                  Navigator.of(context).pushNamed('/signup');
                   },
                 child: const Text("Register",
                   style: TextStyle(
