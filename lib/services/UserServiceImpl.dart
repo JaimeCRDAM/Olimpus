@@ -8,7 +8,7 @@ import '../models/users/humans/Human.dart';
 import 'UserService.dart';
 
 class UserServiceImpl implements UserService {
-  var server = 'http://192.168.1.133:9004/olimpus/';
+  var server = 'http://192.168.209.22:9004/olimpus/'; //Clase
 
   @override
   Future<User?> loginUser(User user) async {
@@ -31,5 +31,11 @@ class UserServiceImpl implements UserService {
     if(response.statusCode != 200) return null;
     Map<String, dynamic> bodyAsJson = json.decode(response.body);
     return Human.fromJson(bodyAsJson);
+  }
+
+  @override
+  Future<bool?> updatePassword(User user) async {
+    // TODO: implement updatePassword
+    throw UnimplementedError();
   }
 }

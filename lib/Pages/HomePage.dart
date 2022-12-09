@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void selfLogin(){
-    var tempMail = "Jedediah Thompson";
+    var tempMail = "Adolf Weissnat";
     var tempPass = "p";
     User user = tempMail.contains("@") ? Human(null, tempMail, tempPass) : God(tempMail, tempPass);
     _userServiceImpl.loginUser(user).then((value) {

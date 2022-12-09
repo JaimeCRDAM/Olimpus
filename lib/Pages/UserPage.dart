@@ -1,7 +1,10 @@
+
+
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:idk/models/Utils/Camera/Camera.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 import '../models/Const.dart';
 
@@ -15,10 +18,12 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
 
   late final TextEditingController _password;
+  late Image imageShown;
 
   @override
   void initState() {
     _password = TextEditingController();
+    imageShown = Image.network('https://picsum.photos/250?image=9', key: UniqueKey());
     super.initState();
   }
 
@@ -74,54 +79,61 @@ class _UserPageState extends State<UserPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text("Avatar"),
-                    Image.network('https://picsum.photos/250?image=9'),
                     Column(
                       children: [
-                        TextButton(
-                          onPressed: () async {
-                            late final photo;
-                            await availableCameras().then(
-                              (value) {
-                                photo = Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (_) =>
-                                        CameraPage(cameras: value))
-                                );
-                              }
-                            );
-                            Globals.showSnackBar("Save pressed", context);
-                          },
-                          child: const Text("Camera")
+                        Container(
+                            height: 200,
+                            width: 400,
+                            child:imageShown
                         ),
-                        TextButton(
-                            onPressed: (){
-                              Globals.showSnackBar("Save pressed", context);
-                            },
-                            child: const Text("Phone")
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            TextButton(
+                                onPressed: () async {
+                                  _getFromCamera().then((value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        imageShown = Image.file(File(value.path), key: UniqueKey());
+                                      });
+                                    }
+                                  });
+                                },
+                                child: const Text("Camera")
+                            ),
+                            TextButton(
+                                onPressed: (){
+                                  _getFromGallery().then((value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        imageShown = Image.file(File(value.path), key: UniqueKey());
+                                      });
+                                    }
+                                  });
+                                },
+                                child: const Text("Phone")
+                            )
+                          ],
                         )
                       ],
+                    ),
+                    TextButton(
+                        onPressed: (){
+                          Globals.showSnackBar("Save pressed", context);
+                        },
+                        child: const Text("Save")
                     )
                   ],
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Username"),
-                    Expanded(
-                        child: Text(
-                          Globals.currentUser?.name as String,
-                          textAlign: TextAlign.center,
-                        )
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text("Username"),
-                    Expanded(
-                        child: Text(
-                          Globals.currentUser?.name as String,
-                          textAlign: TextAlign.center,
-                        )
+                    const Text("Email"),
+                    Text(
+                      Globals.currentUser?.email != null ? Globals.currentUser?.email as String : "You are a GOD",
+                      textAlign: TextAlign.center,
                     )
                   ],
                 ),
@@ -132,4 +144,19 @@ class _UserPageState extends State<UserPage> {
       ),
     );
   }
+  Future<XFile?> _getFromGallery() async {
+    return await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+  }
+  Future<XFile?> _getFromCamera() async {
+    return await ImagePicker().pickImage(
+      source: ImageSource.camera,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+  }
+
 }
