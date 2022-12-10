@@ -8,6 +8,7 @@ class God implements User{
   @override
   String? name;
   String? password;
+  @override
   late String avatar;
   @override
   late String jwt;
@@ -17,7 +18,7 @@ class God implements User{
   String? email;
 
   God(this.name, this.password);
-  God.authGod(God god, this.jwt, this.type) {
+  God.authGod(God god, this.jwt, this.type, this.avatar) {
     name = god.name;
   }
 

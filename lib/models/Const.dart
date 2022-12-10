@@ -4,10 +4,16 @@ import 'package:idk/models/users/User.dart';
 
 class Globals{
   static User? currentUser;
+  //static var server = 'http://192.168.209.22:9004/olimpus/'; //Clase
+  static var server = 'http://192.168.1.133:9004/olimpus/'; //Casa
+  static var storage = 'http://192.168.1.133:9004/storage/'; //Casa
 
   static void showSnackBar(String text, BuildContext context){
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(text),
+      content: Text(
+        text,
+        textAlign: TextAlign.center,
+      ),
     ));
   }
 }

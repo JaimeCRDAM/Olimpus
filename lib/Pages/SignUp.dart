@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import '../models/Const.dart';
 import '../models/users/humans/Human.dart';
 import '../services/UserServiceImpl.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
-
   @override
   State<SignUpPage> createState() => SignUp();
 }
 
 class SignUp extends State<SignUpPage> {
 
-
   late final TextEditingController _email;
   late final TextEditingController _username;
   late final TextEditingController _password;
   late final UserServiceImpl _userServiceImpl;
+
 
   @override
   void initState() {
@@ -69,9 +69,11 @@ class SignUp extends State<SignUpPage> {
                 Globals.currentUser = await _userServiceImpl.registerHuman(human);
                 if(Globals.currentUser == null) {
                   Globals.showSnackBar("Invalid data", context);
+                  return;
                 }
+
                 Globals.showSnackBar("Welcome ${Globals.currentUser?.name}", context);
-                return;
+                context.replace("/mainpage");
               },
               child: const Text("Register",
                   style: TextStyle(

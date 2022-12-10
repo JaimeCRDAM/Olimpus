@@ -13,7 +13,7 @@ God _$GodFromJson(Map<String, dynamic> json) {
       God(
           user['godname'] as String,
           null
-      ), auth['token'] as String, auth['type'] as String);
+      ), auth['token'] as String, auth['type'] as String, user["avatar"]);
 }
 
 Map<String, dynamic> _$GodToJsonLogin(God instance) => <String, dynamic>{
