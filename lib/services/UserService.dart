@@ -7,4 +7,5 @@ abstract class UserService {
   Future<User?> loginUser(User user);
   Future<bool?> updatePassword(User user, String password);
   Future<bool> updateAvatar(User user, File image);
+  Future<bool> logOut(User user);
 }

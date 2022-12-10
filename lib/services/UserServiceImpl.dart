@@ -73,4 +73,20 @@ class UserServiceImpl implements UserService {
     }
     return false;
   }
+
+  @override
+  Future<bool> logOut(User user) async {
+    var route = user.email != null ? "humans/logout": "gods/logout";
+    var response = await http.post(
+        Uri.parse('${Globals.server}$route'),
+        headers: {
+          "Authorization": "${user.type} ${user.jwt}"
+        }
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+
+  }
 }

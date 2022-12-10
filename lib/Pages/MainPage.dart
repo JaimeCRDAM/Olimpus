@@ -39,6 +39,12 @@ class _MainPageState extends State<MainPage> {
                 children: <Widget>[
                   IconButton(
                     onPressed: () {
+                      Globals.userServiceImpl.logOut(Globals.currentUser!).then((value) => context.replace("/"));
+                    },
+                    icon: const Icon(IconData(0xe3b3, fontFamily: 'MaterialIcons')),
+                  ),
+                  IconButton(
+                    onPressed: () {
                       context.push('/userpage');
                     },
                     icon: const Icon(Icons.account_box),
