@@ -2,7 +2,7 @@
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:idk/models/Utils/Camera/Camera.dart';
+import 'package:idk/services/UserServiceImpl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -18,12 +18,21 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
 
   late final TextEditingController _password;
+  late final UserServiceImpl _userServiceImpl;
   late Image imageShown;
+  late File imgFile;
+  bool saveImg = false;
+  bool savePwd = true;
 
   @override
   void initState() {
     _password = TextEditingController();
-    imageShown = Image.network('https://picsum.photos/250?image=9', key: UniqueKey());
+    _userServiceImpl = UserServiceImpl();
+    final currentUser = Globals.currentUser;
+    if (currentUser != null){
+      imageShown = Image.network(Globals.storage+currentUser.avatar, key: UniqueKey());
+    }
+
     super.initState();
   }
 
@@ -64,13 +73,31 @@ class _UserPageState extends State<UserPage> {
                         decoration: const InputDecoration(
                             hintText: 'New password'
                         ),
+                        obscureText: true,
                       )
                     ),
                     TextButton(
-                      onPressed: (){
-                        Globals.showSnackBar("Save pressed", context);
-                      },
-                      child: const Text("Save")
+                      onPressed: savePwd ? (){
+                        _userServiceImpl.updatePassword(Globals.currentUser!, _password.text).then((value){
+                          if(value != null){
+                            Globals.showSnackBar("Password changed", context);
+                            return;
+                          }
+                          Globals.showSnackBar("An error ocurred, try again later", context);
+                        });
+                      }: null,
+                        child: const Text("Save")
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Email"),
+                    Text(
+                      Globals.currentUser?.email != null ? Globals.currentUser?.email as String : "You are a GOD",
+                      textAlign: TextAlign.center,
                     )
                   ],
                 ),
@@ -95,8 +122,10 @@ class _UserPageState extends State<UserPage> {
                                   _getFromCamera().then((value) {
                                     if (value != null) {
                                       setState(() {
-                                        imageShown = Image.file(File(value.path), key: UniqueKey());
+                                        imgFile = File(value.path);
+                                        imageShown = Image.file(imgFile, key: UniqueKey());
                                       });
+                                      saveImg = true;
                                     }
                                   });
                                 },
@@ -107,33 +136,24 @@ class _UserPageState extends State<UserPage> {
                                   _getFromGallery().then((value) {
                                     if (value != null) {
                                       setState(() {
-                                        imageShown = Image.file(File(value.path), key: UniqueKey());
+                                        imgFile = File(value.path);
+                                        imageShown = Image.file(imgFile, key: UniqueKey());
                                       });
+                                      saveImg = true;
                                     }
                                   });
                                 },
-                                child: const Text("Phone")
+                                child: const Text("Gallery")
                             )
                           ],
                         )
                       ],
                     ),
                     TextButton(
-                        onPressed: (){
-                          Globals.showSnackBar("Save pressed", context);
-                        },
-                        child: const Text("Save")
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text("Email"),
-                    Text(
-                      Globals.currentUser?.email != null ? Globals.currentUser?.email as String : "You are a GOD",
-                      textAlign: TextAlign.center,
+                        onPressed: saveImg ? (){
+                          print(_userServiceImpl.updateAvatar(Globals.currentUser!, imgFile));
+                        }: null,
+                        child: const Text("Save"),
                     )
                   ],
                 ),

@@ -14,7 +14,7 @@ Human _$HumanFromJson(Map<String, dynamic> json) {
             user['name'] as String,
             user['email'] as String,
             null
-    ), auth['token'] as String, auth['type'] as String);
+    ), auth['token'] as String, auth['type'] as String, user["avatar"] as String);
 }
 
 Map<String, dynamic> _$HumanToJsonRegister(Human instance) => <String, dynamic>{

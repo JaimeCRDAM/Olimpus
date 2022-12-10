@@ -10,6 +10,7 @@ class Human implements User{
   String? password;
   @override
   late String? email;
+  @override
   late String avatar;
   @override
   late String jwt;
@@ -17,7 +18,7 @@ class Human implements User{
   late String type;
 
   Human(this.name, this.email, this.password);
-  Human.authHuman(Human human, this.jwt, this.type) {
+  Human.authHuman(Human human, this.jwt, this.type, this.avatar) {
     name = human.name;
     email = human.email;
   }

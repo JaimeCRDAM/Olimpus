@@ -3,7 +3,7 @@ class User {
   late String? email;
   late String jwt;
   late String type;
-
+  late String avatar;
 
 
   Map<String, dynamic>? toJsonAuth(){}
