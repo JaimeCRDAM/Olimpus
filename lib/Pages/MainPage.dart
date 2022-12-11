@@ -74,7 +74,6 @@ class _MainPageState extends State<MainPage> {
           TextButton(
               onPressed: (){
                 context.push('/questmakerpage');
-                Globals.showSnackBar("hola", context);
               },
               child: const Text("Make questsVVV",
                 style: TextStyle(
@@ -87,10 +86,12 @@ class _MainPageState extends State<MainPage> {
     );
     widgetList.add(
         Column(
-          children: const [
+          children:  [
             TextButton(
-              onPressed: null,
-              child: Text("Make quests",
+              onPressed: (){
+                context.push('/questassignerpage');
+              },
+              child: const Text("Assign quests",
                   style: TextStyle(
                     color: Colors.black,
                   )

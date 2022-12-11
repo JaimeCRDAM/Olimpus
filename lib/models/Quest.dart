@@ -7,7 +7,7 @@ part 'Quest.g.dart';
 class Quest{
   int destiny;
   double chance;
-  String? virtue;
+  int? virtue;
   String? keyWords;
   int typeId;
 

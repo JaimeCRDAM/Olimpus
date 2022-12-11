@@ -1,3 +1,6 @@
+import '../Quest.dart';
+import 'humans/Human.dart';
+
 class User {
   late String? name;
   late String? email;

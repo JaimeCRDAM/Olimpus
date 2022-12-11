@@ -3,20 +3,21 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:idk/models/Quest.dart';
+import 'package:idk/models/users/gods/God.dart';
 import 'package:idk/services/UserServiceImpl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import '../models/Const.dart';
 
-class QuestMakerPage extends StatefulWidget {
-  const QuestMakerPage({Key? key}) : super(key: key);
+class QuestAsignerPage extends StatefulWidget {
+  const QuestAsignerPage({Key? key}) : super(key: key);
 
   @override
-  State<QuestMakerPage> createState() => _QuestMakerPageState();
+  State<QuestAsignerPage> createState() => _QuestAsignerPageState();
 }
 
-class _QuestMakerPageState extends State<QuestMakerPage> {
+class _QuestAsignerPageState extends State<QuestAsignerPage> {
 
   late final TextEditingController _destiny;
   late final TextEditingController _chance;
@@ -34,7 +35,6 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
     _chance = TextEditingController();
     _chance.text = "0";
     _virtueOrKeyWords = TextEditingController();
-    _virtueOrKeyWords.text = "";
     _userServiceImpl = UserServiceImpl();
     super.initState();
   }
@@ -57,9 +57,9 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Quest type"),
+                    const Text("Quest to assign"),
                     DropdownButton(
-                        items: dropDownItems(Globals.questNames),
+                        items: dropDownItems((Globals.currentUser as God).quests),
                         value: _dropdownValue,
                         onChanged: (int? value){
                           setState((){
@@ -82,21 +82,9 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Chance of success"),
-                    numericValueWithCheckAndWidth<double>("Chance", _chance, "0")
-                  ],
-                ),
-                virtueOrKeyWords("Words separated by spaces", _virtueOrKeyWords),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
                     TextButton(
                         onPressed:(){
-                          var quest = Quest(int.parse(_destiny.text), double.parse(_chance.text), _dropdownValue == 0 ? null : _dropdownValueVirtues+1, _virtueOrKeyWords.text, _dropdownValue);
-                           _userServiceImpl.createQuest(quest);
-
-                          },
+                        },
                         child: const Text("Save")
                     ),
                   ],
@@ -109,14 +97,17 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
     );
   }
 
-  List<DropdownMenuItem<int>> dropDownItems(List<String> listToParse){
+  List<DropdownMenuItem<int>> dropDownItems(List<Quest>? listToParse){
     var list = <DropdownMenuItem<int>>[];
     var index = 0;
-    for (var value in listToParse) {
+    for (var value in listToParse!) {
+
       list.add(
-        DropdownMenuItem(
-          value: index,
-          child: Text(value))
+          DropdownMenuItem(
+              value: index,
+              child: Text("Quest: ${Globals.questNames[value.typeId-1]}"
+                  "")
+          )
       );
       index++;
     }
@@ -164,7 +155,7 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
               textAlign: TextAlign.center,
             )
         ):  DropdownButton(
-            items: dropDownItems(Globals.virtues),
+            items: null,//dropDownItems(Globals.virtues),
             value: _dropdownValueVirtues,
             onChanged: (int? value){
               setState((){

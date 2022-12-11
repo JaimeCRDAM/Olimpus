@@ -9,7 +9,7 @@ part of 'Quest.dart';
 Quest _$QuestFromJson(Map<String, dynamic> json) => Quest(
       json['destiny'] as int,
       (json['chance'] as num).toDouble(),
-      json['virtue'] as String?,
+      json['virtue'] as int?,
       json['key_words'] as String?,
       json['type_id'] as int,
     );

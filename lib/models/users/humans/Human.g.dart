@@ -17,6 +17,16 @@ Human _$HumanFromJson(Map<String, dynamic> json) {
       ), auth['token'] as String, auth['type'] as String, user["avatar"] as String);
 }
 
+Human _$HumanFromJsonToList(Map<String, dynamic> json) {
+  Map<String, dynamic> user = json['user'];
+  return Human.toList(
+      Human(
+        user['name'] as String,
+        user['email'] as String,
+        null
+      ),user["id"] as int);
+}
+
 Map<String, dynamic> _$HumanToJsonRegister(Human instance) => <String, dynamic>{
   'name': instance.name,
   'password': instance.password,

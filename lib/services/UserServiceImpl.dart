@@ -14,7 +14,7 @@ import 'UserService.dart';
 class UserServiceImpl implements UserService {
 
   @override
-  Future<User?> loginUser(User user) async {
+  Future<void> loginUser(User user) async {
     var loginRoute = user.email != null ? "humans/login": "gods/login";
     var response = await http.post(
         Uri.parse('${Globals.server}$loginRoute'),
@@ -22,7 +22,7 @@ class UserServiceImpl implements UserService {
     );
     if(response.statusCode != 200) return null;
     Map<String, dynamic> bodyAsJson = json.decode(response.body);
-    return user.email != null ? Human.fromJson(bodyAsJson) : God.fromJson(bodyAsJson);
+    user.email != null ? Human.fromJson(bodyAsJson) : God.fromJson(bodyAsJson);
   }
 
   @override
@@ -94,17 +94,72 @@ class UserServiceImpl implements UserService {
   @override
   Future<bool> createQuest(Quest quest) async {
     var route = "quest";
+    var body = json.encode(quest.toJson());
     var response = await http.post(
         Uri.parse('${Globals.server}$route'),
-        body: json.encode(quest.toJson()),
+        body: body,
         headers: {
-          "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser?.jwt}"
+          "content-type": "application/json",
+          "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser?.jwt}",
+          "Accept": "application/json",
         }
     );
     if (response.statusCode == 200){
       return true;
     }
+    var decoded = json.decode(response.body);
+    print(decoded);
     return false;
+  }
+
+  @override
+  Future<List<Human>?> getAllHumans() async {
+    try {
+      var route = "gods/humans";
+      var response = await http.get(
+          Uri.parse('${Globals.server}$route'),
+          headers: {
+            "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+                ?.jwt}"
+          }
+      );
+      Map<String, dynamic> bodyAsJson = json.decode(response.body);
+      List<Human> temp = (bodyAsJson["humans"] as List)
+          .map((human) => Human.fromJson(human))
+          .toList();
+      return temp;
+    } catch(e){
+      e.hashCode;
+    }
+    return null;
+  }
+
+  @override
+  Future<List<Quest>?> getAllQuests() async {
+    var ak = "${Globals.currentUser?.type} ${Globals.currentUser
+        ?.jwt}";
+    try {
+      var route = "gods/quests";
+      var response = await http.get(
+          Uri.parse('${Globals.server}$route'   ),
+          headers: {
+            "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+                ?.jwt}",
+            "Accept": "application/json",
+          }
+      );
+      Map<String, dynamic> bodyAsJson = json.decode(response.body);
+      var decoded = json.decode(response.body);
+      print(decoded);
+      List<Quest> temp = (bodyAsJson["quests"] as List)
+          .map((quest) => Quest.fromJson(quest))
+          .toList();
+      return temp;
+    } catch(e){
+
+      e.hashCode;
+    }
+    return null;
   }
 
 }
