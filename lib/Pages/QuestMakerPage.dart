@@ -2,6 +2,7 @@
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:idk/models/Quest.dart';
 import 'package:idk/services/UserServiceImpl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -17,22 +18,23 @@ class QuestMakerPage extends StatefulWidget {
 
 class _QuestMakerPageState extends State<QuestMakerPage> {
 
-  late final TextEditingController _password;
+  late final TextEditingController _destiny;
+  late final TextEditingController _chance;
+  late final TextEditingController _virtueOrKeyWords;
   late final UserServiceImpl _userServiceImpl;
-  late Image imageShown;
+  int _dropdownValue = 0;
+  int _dropdownValueVirtues = 0;
   late File imgFile;
-  bool saveImg = false;
-  bool savePwd = true;
+  late int questId;
 
   @override
   void initState() {
-    _password = TextEditingController();
+    _destiny = TextEditingController();
+    _destiny.text = "0";
+    _chance = TextEditingController();
+    _chance.text = "0";
+    _virtueOrKeyWords = TextEditingController();
     _userServiceImpl = UserServiceImpl();
-    final currentUser = Globals.currentUser;
-    if (currentUser != null){
-      imageShown = Image.network(Globals.storage+currentUser.avatar, key: UniqueKey());
-    }
-
     super.initState();
   }
 
@@ -54,39 +56,15 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Username"),
-                    Text(
-                      Globals.currentUser?.name as String,
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children:  [
-                    const Text("Password"),
-                    IntrinsicWidth(
-                        child: TextField(
-                          controller: _password,
-                          textAlign: TextAlign.center,
-                          decoration: const InputDecoration(
-                              hintText: 'New password'
-                          ),
-                          obscureText: true,
-                        )
-                    ),
-                    TextButton(
-                        onPressed: savePwd ? (){
-                          _userServiceImpl.updatePassword(Globals.currentUser!, _password.text).then((value){
-                            if(value != null){
-                              Globals.showSnackBar("Password changed", context);
-                              return;
-                            }
-                            Globals.showSnackBar("An error ocurred, try again later", context);
+                    const Text("Quest type"),
+                    DropdownButton(
+                        items: dropDownItems(Globals.questNames),
+                        value: _dropdownValue,
+                        onChanged: (int? value){
+                          setState((){
+                            _dropdownValue = value!;
                           });
-                        }: null,
-                        child: const Text("Save")
+                        }
                     )
                   ],
                 ),
@@ -94,67 +72,31 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Email"),
-                    Text(
-                      Globals.currentUser?.email != null ? Globals.currentUser?.email as String : "You are a GOD",
-                      textAlign: TextAlign.center,
-                    )
+                    const Text("Destiny"),
+                    numericValueWithCheckAndWidth<int>("Destiny", _destiny, "0")
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Avatar"),
-                    Column(
-                      children: [
-                        Container(
-                            height: 200,
-                            width: 400,
-                            child:imageShown
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            TextButton(
-                                onPressed: () async {
-                                  _getFromCamera().then((value) {
-                                    if (value != null) {
-                                      setState(() {
-                                        imgFile = File(value.path);
-                                        imageShown = Image.file(imgFile, key: UniqueKey());
-                                      });
-                                      saveImg = true;
-                                    }
-                                  });
-                                },
-                                child: const Text("Camera")
-                            ),
-                            TextButton(
-                                onPressed: (){
-                                  _getFromGallery().then((value) {
-                                    if (value != null) {
-                                      setState(() {
-                                        imgFile = File(value.path);
-                                        imageShown = Image.file(imgFile, key: UniqueKey());
-                                      });
-                                      saveImg = true;
-                                    }
-                                  });
-                                },
-                                child: const Text("Gallery")
-                            )
-                          ],
-                        )
-                      ],
-                    ),
+                    const Text("Chance of success"),
+                    numericValueWithCheckAndWidth<double>("Chance", _chance, "0")
+                  ],
+                ),
+                virtueOrKeyWords("Words separated by spaces", _virtueOrKeyWords),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
                     TextButton(
-                      onPressed: saveImg ? (){
-                        print(_userServiceImpl.updateAvatar(Globals.currentUser!, imgFile));
-                      }: null,
-                      child: const Text("Save"),
-                    )
+                        onPressed:(){
+                          var quest = Quest(int.parse(_destiny.text), double.parse(_chance.text), _dropdownValue == 0 ? null : Globals.virtues[_dropdownValueVirtues], _virtueOrKeyWords.text, _dropdownValue);
+                           _userServiceImpl.createQuest(quest);
+
+                          },
+                        child: const Text("Save")
+                    ),
                   ],
                 ),
               ],
@@ -164,18 +106,71 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
       ),
     );
   }
-  Future<XFile?> _getFromGallery() async {
-    return await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1800,
-      maxHeight: 1800,
+
+  List<DropdownMenuItem<int>> dropDownItems(List<String> listToParse){
+    var list = <DropdownMenuItem<int>>[];
+    var index = 0;
+    for (var value in listToParse) {
+      list.add(
+        DropdownMenuItem(
+          value: index,
+          child: Text(value))
+      );
+      index++;
+    }
+    return list;
+  }
+  IntrinsicWidth numericValueWithCheckAndWidth<T>(String field, TextEditingController controller, String reset){
+    return IntrinsicWidth(
+        child: TextField(
+          controller: controller,
+          decoration:  InputDecoration(
+              hintText: field
+          ),
+          textAlign: TextAlign.center,
+          keyboardType: const TextInputType.numberWithOptions(),
+          onSubmitted: (String? value){
+            try{
+              if (T is int){
+                int.parse(value!);
+              } else{
+                double.parse(value!);
+              }
+            } catch(e){
+              Globals.showSnackBar("Please enter a valid number", context);
+              setState(() {
+                controller.text = reset;
+              });
+            }
+          },
+        )
     );
   }
-  Future<XFile?> _getFromCamera() async {
-    return await ImagePicker().pickImage(
-      source: ImageSource.camera,
-      maxWidth: 1800,
-      maxHeight: 1800,
+
+  Row virtueOrKeyWords(String field, TextEditingController controller){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _dropdownValue == 0 ?  const Text("Key Words") : const Text("Virtue"),
+        _dropdownValue == 0 ? IntrinsicWidth(
+            child: TextField(
+              controller: controller,
+              decoration:  InputDecoration(
+                  hintText: field
+              ),
+              textAlign: TextAlign.center,
+            )
+        ):  DropdownButton(
+            items: dropDownItems(Globals.virtues),
+            value: _dropdownValueVirtues,
+            onChanged: (int? value){
+              setState((){
+                _dropdownValueVirtues = value!;
+              });
+            }
+        )
+      ],
     );
   }
 

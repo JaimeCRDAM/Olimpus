@@ -43,17 +43,18 @@ class MyApp extends StatelessWidget {
                 },
               ),
               GoRoute(
-                path: 'userpage',
-                builder: (BuildContext context, GoRouterState state) {
-                  return const UserPage();
-                },
-              ),
-              GoRoute(
                 path: 'questmakerpage',
                 builder: (BuildContext context, GoRouterState state) {
                   return const QuestMakerPage();
                 },
               ),
+              GoRoute(
+                path: 'userpage',
+                builder: (BuildContext context, GoRouterState state) {
+                  return const UserPage();
+                },
+              ),
+
             ],
           ),
         ],

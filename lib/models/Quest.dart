@@ -11,7 +11,10 @@ class Quest{
   String? keyWords;
   int typeId;
 
-  Quest(this.name, this.password);
+  Quest(this.destiny, this.chance, this.virtue, this.keyWords, this.typeId);
 
+  factory Quest.fromJson(Map<String, dynamic> json) => _$QuestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$QuestToJson(this);
 
 }

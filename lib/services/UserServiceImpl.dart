@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:idk/models/Quest.dart';
 import 'package:path/path.dart';
 
 import 'package:http/http.dart' as http;
@@ -88,6 +89,22 @@ class UserServiceImpl implements UserService {
       return true;
     }
     return false;
-
   }
+
+  @override
+  Future<bool> createQuest(Quest quest) async {
+    var route = "quest";
+    var response = await http.post(
+        Uri.parse('${Globals.server}$route'),
+        body: json.encode(quest.toJson()),
+        headers: {
+          "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser?.jwt}"
+        }
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+  }
+
 }
