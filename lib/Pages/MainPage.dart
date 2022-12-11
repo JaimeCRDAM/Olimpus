@@ -28,8 +28,10 @@ class _MainPageState extends State<MainPage> {
         body: Column(
           children: <Widget>[
             Expanded(
-                child: Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: loadWidgets(),
                 )
             ),
             Container(
@@ -56,4 +58,113 @@ class _MainPageState extends State<MainPage> {
         ),
     );
   }
+  List<Widget> loadWidgets(){
+    if(Globals.currentUser?.email != null){
+      return loadHumanWidgets();
+    }
+    else{
+      return  loadGodWidgets();
+    }
+  }
+  List<Widget> loadGodWidgets(){
+    var widgetList = <Widget>[];
+    widgetList.add(
+        Column(
+        children:  [
+          TextButton(
+              onPressed: (){
+                context.push('/questmakerpage');
+                Globals.showSnackBar("hola", context);
+              },
+              child: const Text("Make questsVVV",
+                style: TextStyle(
+                  color: Colors.black,
+                )
+            ),
+          )
+        ],
+      )
+    );
+    widgetList.add(
+        Column(
+          children: const [
+            TextButton(
+              onPressed: null,
+              child: Text("Make quests",
+                  style: TextStyle(
+                    color: Colors.black,
+                  )
+              ),
+            )
+          ],
+        )
+    );
+    widgetList.add(
+        Column(
+          children: const [
+            TextButton(
+              onPressed: null,
+              child: Text("Make quests",
+                  style: TextStyle(
+                    color: Colors.black,
+                  )
+              ),
+            )
+          ],
+        )
+    );
+    widgetList.add(
+        Column(
+          children: const [
+            TextButton(
+              onPressed: null,
+              child: Text("Make quests",
+                  style: TextStyle(
+                    color: Colors.black,
+                  )
+              ),
+            )
+          ],
+        )
+    );
+    widgetList.add(
+        Column(
+          children: const [
+            TextButton(
+              onPressed: null,
+              child: Text("Make quests",
+                  style: TextStyle(
+                    color: Colors.black,
+                  )
+              ),
+            )
+          ],
+        )
+    );
+
+
+
+    return widgetList;
+  }
+  List<Widget> loadHumanWidgets(){
+    var widgetList = <Widget>[];
+    widgetList.add(
+        Row(
+          children: const [
+            TextButton(
+              onPressed: null,
+              child: Text("Make quests",
+                  style: TextStyle(
+                    color: Colors.black,
+                  )
+              ),
+            )
+          ],
+        )
+    );
+
+
+    return widgetList;
+  }
+
 }

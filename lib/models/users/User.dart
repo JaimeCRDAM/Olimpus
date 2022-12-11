@@ -6,6 +6,10 @@ class User {
   late String avatar;
 
 
-  Map<String, dynamic>? toJsonAuth(){}
-  Map<String, dynamic>? toJsonLogin(){}
+  Map<String, dynamic>? toJsonAuth(){
+    return null;
+  }
+  Map<String, dynamic>? toJsonLogin(){
+    return null;
+  }
 }

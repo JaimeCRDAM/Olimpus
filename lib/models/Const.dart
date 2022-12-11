@@ -10,6 +10,8 @@ class Globals{
   static var server = 'http://192.168.1.133:9004/olimpus/'; //Casa
   static var storage = 'http://192.168.1.133:9004/storage/'; //Casa
   static var userServiceImpl = UserServiceImpl();
+  static var questNames = ["Free answer", "Election", "Casual quest", "Valuation"];
+  static var virtues = ["Wisdom", "Nobility", "Virtue", "Wickedness", "Audacity"];
 
   static void showSnackBar(String text, BuildContext context){
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(

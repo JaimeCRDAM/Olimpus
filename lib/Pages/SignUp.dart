@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 
 import '../models/Const.dart';
@@ -71,7 +73,7 @@ class SignUp extends State<SignUpPage> {
                   Globals.showSnackBar("Invalid data", context);
                   return;
                 }
-
+                Globals.currentUser = await _userServiceImpl.loginUser(human);
                 Globals.showSnackBar("Welcome ${Globals.currentUser?.name}", context);
                 context.replace("/mainpage");
               },
