@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:idk/Pages/UserPage.dart';
 
-import 'Pages/HomePage.dart';
+import 'Pages/LoginPage.dart';
 import 'Pages/MainPage.dart';
+import 'Pages/QuestMakerPage.dart';
 import 'Pages/SignUp.dart';
 
 void main() {
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
           GoRoute(
             path: '/',
             builder: (BuildContext context, GoRouterState state) {
-              return const HomePage();
+              return const LoginPage();
             },
             routes: <RouteBase>[
               GoRoute(
@@ -45,6 +46,12 @@ class MyApp extends StatelessWidget {
                 path: 'userpage',
                 builder: (BuildContext context, GoRouterState state) {
                   return const UserPage();
+                },
+              ),
+              GoRoute(
+                path: 'questmakerpage',
+                builder: (BuildContext context, GoRouterState state) {
+                  return const QuestMakerPage();
                 },
               ),
             ],

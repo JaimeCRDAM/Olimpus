@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:idk/models/users/gods/God.dart';
@@ -8,14 +9,14 @@ import '../models/users/User.dart';
 import '../models/users/humans/Human.dart';
 import '../services/UserServiceImpl.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _LoginPageState extends State<LoginPage> {
 
   late final TextEditingController _email;
   late final TextEditingController _password;
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void selfLogin(){
-    var tempMail = "mose.lemke@gmail.com";
+    var tempMail = "Peggie Robel";
     var tempPass = "p";
     User user = tempMail.contains("@") ? Human(null, tempMail, tempPass) : God(tempMail, tempPass);
     _userServiceImpl.loginUser(user).then((value) {

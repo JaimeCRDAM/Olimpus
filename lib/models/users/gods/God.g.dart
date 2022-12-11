@@ -6,22 +6,20 @@ part of 'God.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-God _$GodFromJson(Map<String, dynamic> json) {
-  Map<String, dynamic> user = json['user'];
-  Map<String, dynamic> auth = json['authorisation'];
-  return God.authGod(
-      God(
-          user['godname'] as String,
-          null
-      ), auth['token'] as String, auth['type'] as String, user["avatar"]);
-}
+God _$GodFromJson(Map<String, dynamic> json) => God(
+      json['name'] as String?,
+      json['password'] as String?,
+    )
+      ..avatar = json['avatar'] as String
+      ..jwt = json['jwt'] as String
+      ..type = json['type'] as String
+      ..email = json['email'] as String?;
 
-Map<String, dynamic> _$GodToJsonLogin(God instance) => <String, dynamic>{
-  'password': instance.password,
-  'godname': instance.name,
-};
-
-Map<String, dynamic> _$GodToJsonAuth(God instance) => <String, dynamic>{
-  'type': instance.type,
-  'jwt': instance.jwt
-};
+Map<String, dynamic> _$GodToJson(God instance) => <String, dynamic>{
+      'name': instance.name,
+      'password': instance.password,
+      'avatar': instance.avatar,
+      'jwt': instance.jwt,
+      'type': instance.type,
+      'email': instance.email,
+    };

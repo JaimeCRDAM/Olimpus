@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:path/path.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:idk/models/users/gods/God.dart';
@@ -55,13 +56,13 @@ class UserServiceImpl implements UserService {
   Future<bool> updateAvatar(User user, File image) async {
     var loginRoute = user.email != null ? "humans/avatar": "gods/avatar";
     String base64Image;
-    String extension = "png";
+    String fileExtension = extension(image.path);
     base64Image = base64Encode(await image.readAsBytes());
 
     var response = await http.post(
         Uri.parse('${Globals.server}$loginRoute'),
         body: {
-          "imageType": extension,
+          "imageType": fileExtension,
           "base64String": base64Image
         },
         headers: {
