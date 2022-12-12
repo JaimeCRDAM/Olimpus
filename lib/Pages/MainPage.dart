@@ -75,7 +75,7 @@ class _MainPageState extends State<MainPage> {
               onPressed: (){
                 context.push('/questmakerpage');
               },
-              child: const Text("Make questsVVV",
+              child: const Text("Make quests",
                 style: TextStyle(
                   color: Colors.black,
                 )
@@ -156,11 +156,12 @@ class _MainPageState extends State<MainPage> {
   List<Widget> loadHumanWidgets(){
     var widgetList = <Widget>[];
     widgetList.add(
-        Row(
-          children: const [
+        Column(
+          children:  [
             TextButton(
-              onPressed: null,
-              child: Text("Make quests",
+              onPressed: (){
+              },
+              child: const Text("Resolve quests",
                   style: TextStyle(
                     color: Colors.black,
                   )
@@ -169,7 +170,37 @@ class _MainPageState extends State<MainPage> {
           ],
         )
     );
-
+    widgetList.add(
+        Column(
+          children:  [
+            TextButton(
+              onPressed: (){
+                context.go("/attributesPage");
+              },
+              child: const Text("Attributes",
+                  style: TextStyle(
+                    color: Colors.black,
+                  )
+              ),
+            )
+          ],
+        )
+    );
+    widgetList.add(
+        Column(
+          children:  [
+            TextButton(
+              onPressed: (){
+              },
+              child: const Text("Create Humans",
+                  style: TextStyle(
+                    color: Colors.black,
+                  )
+              ),
+            )
+          ],
+        )
+    );
 
     return widgetList;
   }

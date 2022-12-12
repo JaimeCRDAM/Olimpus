@@ -9,7 +9,7 @@ class Globals{
   //static var server = 'http://192.168.209.22:9004/olimpus/'; //Clase
   static var server = 'http://192.168.1.133:9004/olimpus/'; //Casa
   static var storage = 'http://192.168.1.133:9004/storage/'; //Casa
-  static var log = "Hades";
+  static var log = "Jaime@email.com";
   static var pass = "p";
   static var userServiceImpl = UserServiceImpl();
   static var questNames = ["Free answer", "Election", "Casual quest", "Valuation"];
