@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:idk/models/Quest.dart';
 import 'package:path/path.dart';
 
@@ -157,8 +156,6 @@ class UserServiceImpl implements UserService {
 
   @override
   Future<List<Quest>?> getAllQuests() async {
-    var ak = "${Globals.currentUser?.type} ${Globals.currentUser
-        ?.jwt}";
     try {
       var route = "gods/quests";
       var response = await http.get(
@@ -246,4 +243,21 @@ class UserServiceImpl implements UserService {
     return false;
   }
 
+  @override
+  Future<List<Human>?> getAllHumansDead() async {
+    var route = "hades/watchhumans";
+    var response = await http.get(
+        Uri.parse('${Globals.server}$route'),
+        headers: {
+          "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+              ?.jwt}",
+          "content-type": "application/json",
+        }
+    );
+    Map<String, dynamic> bodyAsJson = json.decode(response.body);
+    List<Human> temp = (bodyAsJson["humans"] as List)
+        .map((human) => Human.fromJsonToList(human))
+        .toList();
+    return temp;
+  }
 }
