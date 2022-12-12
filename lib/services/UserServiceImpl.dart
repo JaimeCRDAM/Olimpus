@@ -190,4 +190,18 @@ class UserServiceImpl implements UserService {
     return false;
   }
 
+  @override
+  Future<bool> registerHumanByGod(Human human) async {
+    var response = await http.post(
+        Uri.parse('${Globals.server}gods/human'),
+        body: human.toJsonRegister(),
+        headers: {
+          "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+              ?.jwt}"
+        }
+    );
+    if(response.statusCode != 200) return false;
+    return true;
+  }
+
 }
