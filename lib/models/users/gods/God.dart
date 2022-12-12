@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:idk/models/users/User.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -24,6 +23,7 @@ class God implements User{
   String? email;
   late List<Human>? humans;
   late List<Human>? HadesHumans;
+  late List<Human>? deadHumans;
   late List<Quest>? quests;
 
   God(this.name, this.password);
@@ -39,6 +39,9 @@ class God implements User{
     if(Globals.currentUser!.name == "Hades"){
       Globals.userServiceImpl.getAllHumansHades().then((value){
         HadesHumans = value;
+      });
+      Globals.userServiceImpl.getAllHumansDead().then((value){
+        deadHumans = value;
       });
     }
   }
