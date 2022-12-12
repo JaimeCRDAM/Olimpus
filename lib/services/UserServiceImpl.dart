@@ -132,6 +132,7 @@ class UserServiceImpl implements UserService {
     }
     return null;
   }
+
   @override
   Future<List<Human>?> getAllHumansHades() async {
     try {
@@ -176,6 +177,7 @@ class UserServiceImpl implements UserService {
     }
     return null;
   }
+
   @override
   Future<bool> assignQuest(Quest dropdownValueQuest, Human dropdownValueHuman, int dropdownValueQuestion, int amount) async {
     var quest = dropdownValueQuest.toJson();
@@ -259,5 +261,26 @@ class UserServiceImpl implements UserService {
         .map((human) => Human.fromJsonToList(human))
         .toList();
     return temp;
+  }
+
+  @override
+  Future<bool> changeDestiny(int destiny) async {
+    var jsonBody = json.encode({
+      "destiny": destiny,
+    });
+    var route = "gods/destiny";
+    var response = await http.post(
+        Uri.parse('${Globals.server}$route'),
+        body: jsonBody,
+        headers: {
+          "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+              ?.jwt}",
+          "content-type": "application/json",
+        }
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
   }
 }

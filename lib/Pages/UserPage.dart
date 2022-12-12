@@ -2,6 +2,7 @@
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:idk/models/users/gods/God.dart';
 import 'package:idk/services/UserServiceImpl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -18,6 +19,7 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
 
   late final TextEditingController _password;
+  late final TextEditingController _amount;
   late final UserServiceImpl _userServiceImpl;
   late Image imageShown;
   late File imgFile;
@@ -27,6 +29,7 @@ class _UserPageState extends State<UserPage> {
   @override
   void initState() {
     _password = TextEditingController();
+    _amount = TextEditingController();
     _userServiceImpl = UserServiceImpl();
     final currentUser = Globals.currentUser;
     if (currentUser != null){
@@ -157,6 +160,36 @@ class _UserPageState extends State<UserPage> {
                     )
                   ],
                 ),
+                if(Globals.currentUser is God)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text("Destiny"),
+                      IntrinsicWidth(
+                          child: TextField(
+                            controller: _amount,
+                            decoration:  const InputDecoration(
+                                hintText: "Amount"
+                            ),
+                            textAlign: TextAlign.center,
+                            keyboardType: const TextInputType.numberWithOptions(decimal: false, signed: false),
+                          )
+                      ),
+                      TextButton(
+                        onPressed:(){
+                          _userServiceImpl.changeDestiny(int.parse(_amount.text)).then((value){
+                            if(value){
+                              Globals.showSnackBar("Destiny changed", context);
+                              return;
+                            }
+                            Globals.showSnackBar("An error ocurred, try again later", context);
+                          });
+                        },
+                        child: const Text("Save"),
+                      )
+                    ],
+                  ),
               ],
             ),
           ),
