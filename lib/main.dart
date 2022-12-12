@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:idk/Pages/godpages/Hades/BornToDiePage.dart';
+import 'package:idk/Pages/godpages/Hades/ContemplateTheDeadPage.dart';
 import 'package:idk/Pages/godpages/HumanCreatorPage.dart';
 import 'package:idk/Pages/godpages/QuestAsignerPage.dart';
 import 'package:idk/Pages/UserPage.dart';
@@ -66,6 +68,18 @@ class MyApp extends StatelessWidget {
                 path: 'humancreatorpage',
                 builder: (BuildContext context, GoRouterState state) {
                   return const HumanCreatorPage();
+                },
+              ),
+              GoRoute(
+                path: 'borntodiepage',
+                builder: (BuildContext context, GoRouterState state) {
+                  return const BornToDiePage();
+                },
+              ),
+              GoRoute(
+                path: 'contemplatethedeadpage',
+                builder: (BuildContext context, GoRouterState state) {
+                  return const ContemplateTheDeadPage();
                 },
               ),
             ],

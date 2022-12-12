@@ -116,36 +116,40 @@ class _MainPageState extends State<MainPage> {
           ],
         )
     );
-    widgetList.add(
-        Column(
-          children: const [
-            TextButton(
-              onPressed: null,
-              child: Text("Make quests",
-                  style: TextStyle(
-                    color: Colors.black,
-                  )
-              ),
-            )
-          ],
-        )
-    );
-    widgetList.add(
-        Column(
-          children: const [
-            TextButton(
-              onPressed: null,
-              child: Text("Make quests",
-                  style: TextStyle(
-                    color: Colors.black,
-                  )
-              ),
-            )
-          ],
-        )
-    );
-
-
+    if(Globals.currentUser?.name == "Hades"){
+      widgetList.add(
+          Column(
+            children:  [
+              TextButton(
+                onPressed: (){
+                  context.push('/borntodiepage');
+                },
+                child: const Text("Born to die",
+                    style: TextStyle(
+                      color: Colors.black,
+                    )
+                ),
+              )
+            ],
+          )
+      );
+      widgetList.add(
+          Column(
+            children:  [
+              TextButton(
+                onPressed: (){
+                  context.push('/contemplatethedeadpage');
+                },
+                child: const Text("Contemplate the dead",
+                    style: TextStyle(
+                      color: Colors.black,
+                    )
+                ),
+              )
+            ],
+          )
+      );
+    }
 
     return widgetList;
   }
