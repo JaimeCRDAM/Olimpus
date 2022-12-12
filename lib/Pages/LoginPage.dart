@@ -32,12 +32,17 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void selfLogin(){
-    var tempMail = "Peggie Robel";
-    var tempPass = "p";
+    var tempMail = Globals.log;
+    var tempPass = Globals.pass;
     User user = tempMail.contains("@") ? Human(null, tempMail, tempPass) : God(tempMail, tempPass);
     _userServiceImpl.loginUser(user).then((value) {
-      Globals.currentUser = value;
-      context.replace("/mainpage");
+      try{
+        if(value){
+          context.replace("/mainpage");
+        }
+      }catch(e){
+        Globals.showSnackBar("Invalid data", context);
+      }
     });
   }
 
@@ -83,12 +88,17 @@ class _LoginPageState extends State<LoginPage> {
                 TextButton(
                   onPressed: () async {
                     User user = _email.text.contains("@") ? Human(null, _email.text, _password.text) : God(_email.text, _password.text);
-                    Globals.currentUser = await _userServiceImpl.loginUser(user);
+                    /*await _userServiceImpl.loginUser(user);
                     if(Globals.currentUser == null) {
                       Globals.showSnackBar("Invalid data", context);
                       return;
                     }
-                    context.replace("/mainpage");
+                    context.replace("/mainpage");*/
+                    try{
+                        selfLogin();
+                      }catch(e){
+                        Globals.showSnackBar("Invalid data", context);
+                      }
                   },
                   child: const Text("Login",
                       style: TextStyle(

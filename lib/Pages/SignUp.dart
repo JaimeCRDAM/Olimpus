@@ -68,12 +68,12 @@ class SignUp extends State<SignUpPage> {
             TextButton(
               onPressed: () async {
                 Human human = Human(_username.text, _email.text, _password.text);
-                Globals.currentUser = await _userServiceImpl.registerHuman(human);
+                await _userServiceImpl.registerHuman(human);
                 if(Globals.currentUser == null) {
                   Globals.showSnackBar("Invalid data", context);
                   return;
                 }
-                Globals.currentUser = await _userServiceImpl.loginUser(human);
+                await _userServiceImpl.loginUser(human);
                 Globals.showSnackBar("Welcome ${Globals.currentUser?.name}", context);
                 context.replace("/mainpage");
               },

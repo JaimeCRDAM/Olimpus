@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:idk/Pages/QuestAsignerPage.dart';
 import 'package:idk/Pages/UserPage.dart';
 
 import 'Pages/LoginPage.dart';
@@ -54,7 +55,12 @@ class MyApp extends StatelessWidget {
                   return const UserPage();
                 },
               ),
-
+              GoRoute(
+                path: 'questassignerpage',
+                builder: (BuildContext context, GoRouterState state) {
+                  return const QuestAsignerPage();
+                },
+              ),
             ],
           ),
         ],

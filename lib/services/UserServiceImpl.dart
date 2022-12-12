@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:idk/models/Quest.dart';
 import 'package:path/path.dart';
 
@@ -14,15 +15,16 @@ import 'UserService.dart';
 class UserServiceImpl implements UserService {
 
   @override
-  Future<User?> loginUser(User user) async {
+  Future<bool> loginUser(User user) async {
     var loginRoute = user.email != null ? "humans/login": "gods/login";
     var response = await http.post(
         Uri.parse('${Globals.server}$loginRoute'),
         body: user.toJsonLogin()
     );
-    if(response.statusCode != 200) return null;
+    if(response.statusCode != 200) return false;
     Map<String, dynamic> bodyAsJson = json.decode(response.body);
-    return user.email != null ? Human.fromJson(bodyAsJson) : God.fromJson(bodyAsJson);
+    user.email != null ? Human.fromJson(bodyAsJson) : God.fromJson(bodyAsJson);
+    return true;
   }
 
   @override
@@ -94,11 +96,92 @@ class UserServiceImpl implements UserService {
   @override
   Future<bool> createQuest(Quest quest) async {
     var route = "quest";
+    var body = json.encode(quest.toJson());
     var response = await http.post(
         Uri.parse('${Globals.server}$route'),
-        body: json.encode(quest.toJson()),
+        body: body,
         headers: {
-          "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser?.jwt}"
+          "content-type": "application/json",
+          "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser?.jwt}",
+          "Accept": "application/json",
+        }
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  Future<List<Human>?> getAllHumans() async {
+    try {
+      var route = "gods/humans";
+      var response = await http.get(
+          Uri.parse('${Globals.server}$route'),
+          headers: {
+            "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+                ?.jwt}"
+          }
+      );
+      Map<String, dynamic> bodyAsJson = json.decode(response.body);
+      List<Human> temp = (bodyAsJson["humans"] as List)
+          .map((human) => Human.fromJsonToList(human))
+          .toList();
+      return temp;
+    } catch(e){
+      e.hashCode;
+    }
+    return null;
+  }
+
+  @override
+  Future<List<Quest>?> getAllQuests() async {
+    var ak = "${Globals.currentUser?.type} ${Globals.currentUser
+        ?.jwt}";
+    try {
+      var route = "gods/quests";
+      var response = await http.get(
+          Uri.parse('${Globals.server}$route'   ),
+          headers: {
+            "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+                ?.jwt}",
+            "Accept": "application/json",
+          }
+      );
+      Map<String, dynamic> bodyAsJson = json.decode(response.body);
+      List<Quest> temp = (bodyAsJson["quests"] as List)
+          .map((quest) => Quest.fromJson(quest))
+          .toList();
+      return temp;
+    } catch(e){
+      e.hashCode;
+    }
+    return null;
+  }
+  @override
+  Future<bool> assignQuest(Quest dropdownValueQuest, Human dropdownValueHuman, int dropdownValueQuestion, int amount) async {
+    var quest = dropdownValueQuest.toJson();
+    var human = dropdownValueQuestion == 0 ? dropdownValueHuman.toJsonQuest() : (Globals.currentUser as God).humans?.map((human){
+      return human.toJsonQuest();
+    }).toList();
+
+    if(human is List){
+      human.shuffle();
+      human = human.sublist(0, amount);
+    }
+    var jsonBody = json.encode({
+      "quest": quest,
+      "human": human,
+      "multiple": dropdownValueQuestion == 1 ? true : false,
+    });
+    var route = "gods/quests";
+    var response = await http.post(
+        Uri.parse('${Globals.server}$route'),
+        body: jsonBody,
+        headers: {
+          "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+              ?.jwt}",
+          "content-type": "application/json",
         }
     );
     if (response.statusCode == 200){

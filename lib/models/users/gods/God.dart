@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:idk/models/users/User.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../../Const.dart';
+import '../../Quest.dart';
+import '../humans/Human.dart';
 
 part 'God.g.dart';
 
@@ -16,10 +22,21 @@ class God implements User{
   late String type;
   @override
   String? email;
+  late List<Human>? humans;
+  late List<Quest>? quests;
 
   God(this.name, this.password);
-  God.authGod(God god, this.jwt, this.type, this.avatar) {
+  God.authGod(God god, this.jwt, this.type, this.avatar){
     name = god.name;
+    Globals.currentUser = this;
+    Globals.userServiceImpl.getAllHumans().then((value){
+      humans = value;
+      print("done human");
+    });
+    Globals.userServiceImpl.getAllQuests().then((value){
+      quests = value;
+      print("done quest");
+    });
   }
 
   factory God.fromJson(Map<String, dynamic> json) => _$GodFromJson(json);
@@ -28,6 +45,4 @@ class God implements User{
   Map<String, dynamic> toJsonAuth() => _$GodToJsonAuth(this);
   @override
   Map<String, dynamic> toJsonLogin() => _$GodToJsonLogin(this);
-
-
 }

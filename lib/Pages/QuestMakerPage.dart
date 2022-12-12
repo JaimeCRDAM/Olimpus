@@ -21,6 +21,7 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
   late final TextEditingController _destiny;
   late final TextEditingController _chance;
   late final TextEditingController _virtueOrKeyWords;
+  late final TextEditingController _description;
   late final UserServiceImpl _userServiceImpl;
   int _dropdownValue = 0;
   int _dropdownValueVirtues = 0;
@@ -31,9 +32,11 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
   void initState() {
     _destiny = TextEditingController();
     _destiny.text = "0";
+    _description = TextEditingController();
     _chance = TextEditingController();
     _chance.text = "0";
     _virtueOrKeyWords = TextEditingController();
+    _virtueOrKeyWords.text = "";
     _userServiceImpl = UserServiceImpl();
     super.initState();
   }
@@ -63,6 +66,7 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
                         onChanged: (int? value){
                           setState((){
                             _dropdownValue = value!;
+                            _virtueOrKeyWords.text = "";
                           });
                         }
                     )
@@ -84,6 +88,22 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
                     numericValueWithCheckAndWidth<double>("Chance", _chance, "0")
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Description"),
+                    IntrinsicWidth(
+                        child: TextField(
+                        controller: _description,
+                        decoration:  const InputDecoration(
+                            hintText: "Description "
+                        ),
+                        textAlign: TextAlign.center,
+                      )
+                    )
+                  ],
+                ),
                 virtueOrKeyWords("Words separated by spaces", _virtueOrKeyWords),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -91,8 +111,20 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
                   children: [
                     TextButton(
                         onPressed:(){
-                          var quest = Quest(int.parse(_destiny.text), double.parse(_chance.text), _dropdownValue == 0 ? null : Globals.virtues[_dropdownValueVirtues], _virtueOrKeyWords.text, _dropdownValue);
-                           _userServiceImpl.createQuest(quest);
+                          var quest = Quest(
+                              null,
+                              int.parse(_destiny.text),
+                              double.parse(_chance.text),
+                              _dropdownValue == 0 ? null : _dropdownValueVirtues+1,
+                              _virtueOrKeyWords.text,
+                              _dropdownValue,
+                              _description.text
+                          );
+                           _userServiceImpl.createQuest(quest).then((value){
+                             if(!value){
+                               Globals.showSnackBar("Quest not created", context);
+                             }
+                           });
 
                           },
                         child: const Text("Save")
