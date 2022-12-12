@@ -21,8 +21,22 @@ class Human implements User{
 
   late int id;
 
+  late int fate;
+
+  late int wisdom;
+
+  late int nobility;
+
+  late int virtue;
+
+  late int wickedness;
+
+  late int audacity;
+
+  late int alive;
+
   Human(this.name, this.email, this.password);
-  Human.authHuman(Human human, this.jwt, this.type, this.avatar) {
+  Human.authHuman(Human human, this.jwt, this.type, this.avatar, this.fate, this.wisdom, this.nobility, this.virtue, this.wickedness, this.audacity, this.alive){
     name = human.name;
     email = human.email;
     Globals.currentUser = this;

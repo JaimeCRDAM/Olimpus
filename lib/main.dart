@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:idk/Pages/HumanPages/AttributesPage.dart';
 import 'package:idk/Pages/godpages/Hades/BornToDiePage.dart';
 import 'package:idk/Pages/godpages/Hades/ContemplateTheDeadPage.dart';
 import 'package:idk/Pages/godpages/HumanCreatorPage.dart';
@@ -80,6 +81,12 @@ class MyApp extends StatelessWidget {
                 path: 'contemplatethedeadpage',
                 builder: (BuildContext context, GoRouterState state) {
                   return const ContemplateTheDeadPage();
+                },
+              ),
+              GoRoute(
+                path: 'attributesPage',
+                builder: (BuildContext context, GoRouterState state) {
+                  return const AttributesPage();
                 },
               ),
             ],
