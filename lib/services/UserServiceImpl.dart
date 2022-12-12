@@ -133,6 +133,27 @@ class UserServiceImpl implements UserService {
     }
     return null;
   }
+  @override
+  Future<List<Human>?> getAllHumansHades() async {
+    try {
+      var route = "hades/humans";
+      var response = await http.get(
+          Uri.parse('${Globals.server}$route'),
+          headers: {
+            "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+                ?.jwt}"
+          }
+      );
+      Map<String, dynamic> bodyAsJson = json.decode(response.body);
+      List<Human> temp = (bodyAsJson["humans"] as List)
+          .map((human) => Human.fromJsonToList(human))
+          .toList();
+      return temp;
+    } catch(e){
+      e.hashCode;
+    }
+    return null;
+  }
 
   @override
   Future<List<Quest>?> getAllQuests() async {
@@ -202,6 +223,27 @@ class UserServiceImpl implements UserService {
     );
     if(response.statusCode != 200) return false;
     return true;
+  }
+
+  @override
+  Future<bool> massacreHumans(List<Human> humans) async {
+    var jsonBody = json.encode({
+      "humans": humans.map((human){return human.toJsonQuest();}).toList(),
+    });
+    var route = "hades/humans";
+    var response = await http.post(
+        Uri.parse('${Globals.server}$route'),
+        body: jsonBody,
+        headers: {
+          "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+              ?.jwt}",
+          "content-type": "application/json",
+        }
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return false;
   }
 
 }

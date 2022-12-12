@@ -23,6 +23,7 @@ class God implements User{
   @override
   String? email;
   late List<Human>? humans;
+  late List<Human>? HadesHumans;
   late List<Quest>? quests;
 
   God(this.name, this.password);
@@ -31,12 +32,15 @@ class God implements User{
     Globals.currentUser = this;
     Globals.userServiceImpl.getAllHumans().then((value){
       humans = value;
-      print("done human");
     });
     Globals.userServiceImpl.getAllQuests().then((value){
       quests = value;
-      print("done quest");
     });
+    if(Globals.currentUser!.name == "Hades"){
+      Globals.userServiceImpl.getAllHumansHades().then((value){
+        HadesHumans = value;
+      });
+    }
   }
 
   factory God.fromJson(Map<String, dynamic> json) => _$GodFromJson(json);
