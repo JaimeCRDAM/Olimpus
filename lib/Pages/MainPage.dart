@@ -102,10 +102,12 @@ class _MainPageState extends State<MainPage> {
     );
     widgetList.add(
         Column(
-          children: const [
+          children:  [
             TextButton(
-              onPressed: null,
-              child: Text("Make quests",
+              onPressed: (){
+                context.push('/humancreatorpage');
+              },
+              child: const Text("Create Humans",
                   style: TextStyle(
                     color: Colors.black,
                   )

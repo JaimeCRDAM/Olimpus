@@ -9,7 +9,7 @@ import 'package:idk/services/UserServiceImpl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-import '../models/Const.dart';
+import '../../models/Const.dart';
 
 class QuestAsignerPage extends StatefulWidget {
   const QuestAsignerPage({Key? key}) : super(key: key);

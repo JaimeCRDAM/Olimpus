@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:idk/Pages/QuestAsignerPage.dart';
+import 'package:idk/Pages/godpages/HumanCreatorPage.dart';
+import 'package:idk/Pages/godpages/QuestAsignerPage.dart';
 import 'package:idk/Pages/UserPage.dart';
 
 import 'Pages/LoginPage.dart';
 import 'Pages/MainPage.dart';
-import 'Pages/QuestMakerPage.dart';
 import 'Pages/SignUp.dart';
+import 'Pages/godpages/QuestMakerPage.dart';
 
 void main() {
   runApp( const MyApp());
@@ -59,6 +60,12 @@ class MyApp extends StatelessWidget {
                 path: 'questassignerpage',
                 builder: (BuildContext context, GoRouterState state) {
                   return const QuestAsignerPage();
+                },
+              ),
+              GoRoute(
+                path: 'humancreatorpage',
+                builder: (BuildContext context, GoRouterState state) {
+                  return const HumanCreatorPage();
                 },
               ),
             ],
