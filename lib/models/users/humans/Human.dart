@@ -27,12 +27,18 @@ class Human implements User{
     email = human.email;
     Globals.currentUser = this;
   }
-  Human.toList(Human human, this.id);
+
+  Human.toList(Human human,this.avatar, this.id) {
+    name = human.name;
+    email = human.email;
+  }
+
 
   factory Human.fromJson(Map<String, dynamic> json) => _$HumanFromJson(json);
   factory Human.fromJsonToList(Map<String, dynamic> json) => _$HumanFromJsonToList(json);
 
   Map<String, dynamic> toJsonRegister() => _$HumanToJsonRegister(this);
+  Map<String, dynamic> toJsonQuest() => _$HumanToJsonQuest(this);
   @override
   Map<String, dynamic> toJsonAuth() => _$HumanToJsonAuth(this);
   @override

@@ -18,19 +18,21 @@ Human _$HumanFromJson(Map<String, dynamic> json) {
 }
 
 Human _$HumanFromJsonToList(Map<String, dynamic> json) {
-  Map<String, dynamic> user = json['user'];
   return Human.toList(
       Human(
-        user['name'] as String,
-        user['email'] as String,
-        null
-      ),user["id"] as int);
+          json['name'] as String,
+          json['email'] as String,
+          null
+      ), json["avatar"] as String, json["id"] as int);
 }
 
 Map<String, dynamic> _$HumanToJsonRegister(Human instance) => <String, dynamic>{
   'name': instance.name,
   'password': instance.password,
   'email': instance.email,
+};
+Map<String, dynamic> _$HumanToJsonQuest(Human instance) => <String, dynamic>{
+  "id": instance.id,
 };
 
 Map<String, dynamic> _$HumanToJsonLogin(Human instance) => <String, dynamic>{

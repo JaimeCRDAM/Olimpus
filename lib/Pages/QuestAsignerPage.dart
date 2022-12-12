@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:idk/models/Quest.dart';
 import 'package:idk/models/users/gods/God.dart';
+import 'package:idk/models/users/humans/Human.dart';
 import 'package:idk/services/UserServiceImpl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -23,10 +24,13 @@ class _QuestAsignerPageState extends State<QuestAsignerPage> {
   late final TextEditingController _chance;
   late final TextEditingController _virtueOrKeyWords;
   late final UserServiceImpl _userServiceImpl;
-  int _dropdownValue = 0;
-  int _dropdownValueVirtues = 0;
+  late final TextEditingController _amount;
+  Human _dropdownValueHuman = (Globals.currentUser as God).humans![0];
+  Quest _dropdownValueQuest = (Globals.currentUser as God).quests![0];
+  int _dropdownValueQuestion = 0;
   late File imgFile;
   late int questId;
+
 
   @override
   void initState() {
@@ -35,6 +39,7 @@ class _QuestAsignerPageState extends State<QuestAsignerPage> {
     _chance = TextEditingController();
     _chance.text = "0";
     _virtueOrKeyWords = TextEditingController();
+    _amount = TextEditingController();
     _userServiceImpl = UserServiceImpl();
     super.initState();
   }
@@ -60,11 +65,10 @@ class _QuestAsignerPageState extends State<QuestAsignerPage> {
                     const Text("Quest to assign"),
                     DropdownButton(
                         items: dropDownItems((Globals.currentUser as God).quests),
-                        value: _dropdownValue,
-                        onChanged: (int? value){
+                        value: _dropdownValueQuest,
+                        onChanged: (Quest? value){
                           setState((){
-                            _dropdownValue = value!;
-                            _virtueOrKeyWords.text = "";
+                            _dropdownValueQuest = value!;
                           });
                         }
                     )
@@ -74,16 +78,76 @@ class _QuestAsignerPageState extends State<QuestAsignerPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Destiny"),
-                    numericValueWithCheckAndWidth<int>("Destiny", _destiny, "0")
+                    const Text("Human"),
+                    DropdownButton(
+                        items: [0,1].map((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text(["One Human", "Random Humans"][value]),
+                          );
+                        }).toList(),
+                        value: _dropdownValueQuestion,
+                        onChanged: (int? value){
+                          setState((){
+                            _dropdownValueQuestion = value!;
+                          });
+                        }
+                    )
                   ],
                 ),
+                if(_dropdownValueQuestion == 0)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text("Human"),
+                      DropdownButton(
+                          items: dropDownItemsHumans((Globals.currentUser as God).humans),
+                          value: _dropdownValueHuman,
+                          onChanged: (Human? value){
+                            setState((){
+                              _dropdownValueHuman = value!;
+                            });
+                          }
+                      )
+                    ],
+                  ),
+                if(_dropdownValueQuestion == 1)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text("Amount of humans"),
+                      IntrinsicWidth(
+                          child: TextField(
+                            controller: _amount,
+                            decoration:  const InputDecoration(
+                                hintText: "Amount"
+                            ),
+                            textAlign: TextAlign.center,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: false, signed: false),
+                          )
+                      )
+                    ],
+                  ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextButton(
                         onPressed:(){
+                          _userServiceImpl.assignQuest(
+                              _dropdownValueQuest,
+                              _dropdownValueHuman,
+                              _dropdownValueQuestion,
+                              _amount.text == "" ? 0 : int.parse(_amount.text)
+                          ).then((value){
+                            if(value){
+                              Globals.showSnackBar("Quest assigned", context);
+                            } else {
+                              Globals.showSnackBar("Error assigning quest", context);
+                            }
+                          });
                         },
                         child: const Text("Save")
                     ),
@@ -97,22 +161,33 @@ class _QuestAsignerPageState extends State<QuestAsignerPage> {
     );
   }
 
-  List<DropdownMenuItem<int>> dropDownItems(List<Quest>? listToParse){
-    var list = <DropdownMenuItem<int>>[];
-    var index = 0;
+  List<DropdownMenuItem<Quest>> dropDownItems(List<Quest>? listToParse){
+    var list = <DropdownMenuItem<Quest>>[];
     for (var value in listToParse!) {
-
       list.add(
           DropdownMenuItem(
-              value: index,
-              child: Text("Quest: ${Globals.questNames[value.typeId-1]}"
-                  "")
+              value: value,
+              child: Text("Quest: ${Globals.questNames[value.typeId-1]}\n"
+                  "${value.description}")//${value.}
           )
       );
-      index++;
     }
     return list;
+  }//Deberian ser genericos, pero no se como usarlos correctamente
+
+  List<DropdownMenuItem<Human>> dropDownItemsHumans(List<Human>? listToParse){
+    var humanList = <DropdownMenuItem<Human>>[];
+    for (var value in listToParse!) {
+      humanList.add(
+          DropdownMenuItem(
+              value: value,
+              child: Text("Nombre: ${value.name}")//${value.}
+          )
+      );
+    }
+    return humanList;
   }
+
   IntrinsicWidth numericValueWithCheckAndWidth<T>(String field, TextEditingController controller, String reset){
     return IntrinsicWidth(
         child: TextField(
@@ -139,32 +214,4 @@ class _QuestAsignerPageState extends State<QuestAsignerPage> {
         )
     );
   }
-
-  Row virtueOrKeyWords(String field, TextEditingController controller){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _dropdownValue == 0 ?  const Text("Key Words") : const Text("Virtue"),
-        _dropdownValue == 0 ? IntrinsicWidth(
-            child: TextField(
-              controller: controller,
-              decoration:  InputDecoration(
-                  hintText: field
-              ),
-              textAlign: TextAlign.center,
-            )
-        ):  DropdownButton(
-            items: null,//dropDownItems(Globals.virtues),
-            value: _dropdownValueVirtues,
-            onChanged: (int? value){
-              setState((){
-                _dropdownValueVirtues = value!;
-              });
-            }
-        )
-      ],
-    );
-  }
-
 }

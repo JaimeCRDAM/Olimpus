@@ -29,10 +29,13 @@ class God implements User{
   God.authGod(God god, this.jwt, this.type, this.avatar){
     name = god.name;
     Globals.currentUser = this;
-    Globals.userServiceImpl.getAllHumans().then((value){humans = value;});
+    Globals.userServiceImpl.getAllHumans().then((value){
+      humans = value;
+      print("done human");
+    });
     Globals.userServiceImpl.getAllQuests().then((value){
       quests = value;
-      return;
+      print("done quest");
     });
   }
 
@@ -42,6 +45,4 @@ class God implements User{
   Map<String, dynamic> toJsonAuth() => _$GodToJsonAuth(this);
   @override
   Map<String, dynamic> toJsonLogin() => _$GodToJsonLogin(this);
-
-
 }
