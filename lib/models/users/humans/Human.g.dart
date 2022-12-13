@@ -14,7 +14,7 @@ Human _$HumanFromJson(Map<String, dynamic> json) {
           user['name'] as String,
           user['email'] as String,
           null
-      ), auth['token'] as String, auth['type'] as String, user["avatar"] as String, user["fate"] as int, user["wisdom"] as int, user["nobility"] as int, user["virtue"] as int, user["wickedness"] as int, user["audacity"] as int, user["alive"] as int);
+      ), auth['token'] as String, auth['type'] as String, user["avatar"] as String, user["fate"] as int, user["wisdom"] as int, user["nobility"] as int, user["virtue"] as int, user["wickedness"] as int, user["audacity"] as int, user["alive"] as int, user["destiny"] as String);
 }
 
 Human _$HumanFromJsonToList(Map<String, dynamic> json) {

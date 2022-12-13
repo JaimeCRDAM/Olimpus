@@ -14,6 +14,7 @@ abstract class UserService {
   Future<List<Human>?> getAllHumansHades();
   Future<List<Human>?> getAllHumansDead();
   Future<List<Quest>?> getAllQuests();
+  Future<List<Quest>?> getAllHumanQuests();
   Future<bool> assignQuest(Quest dropdownValueQuest, Human dropdownValueHuman, int dropdownValueQuestion, int amount);
   Future<bool> registerHumanByGod(Human human);
   Future<bool> massacreHumans(List<Human> humans);

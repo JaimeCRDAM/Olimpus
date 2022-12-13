@@ -7,6 +7,7 @@ import 'package:idk/Pages/godpages/HumanCreatorPage.dart';
 import 'package:idk/Pages/godpages/QuestAsignerPage.dart';
 import 'package:idk/Pages/UserPage.dart';
 
+import 'Pages/HumanPages/ResolveQuestsPage.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/MainPage.dart';
 import 'Pages/SignUp.dart';
@@ -87,6 +88,12 @@ class MyApp extends StatelessWidget {
                 path: 'attributesPage',
                 builder: (BuildContext context, GoRouterState state) {
                   return const AttributesPage();
+                },
+              ),
+              GoRoute(
+                path: 'resolvequestpage',
+                builder: (BuildContext context, GoRouterState state) {
+                  return const ResolveQuestsPage();
                 },
               ),
             ],

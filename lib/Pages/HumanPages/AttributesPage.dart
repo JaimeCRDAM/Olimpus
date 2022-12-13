@@ -100,6 +100,18 @@ class _AttributesPageState extends State<AttributesPage> {
                     )
                   ],
                 ),
+                if ((Globals.currentUser as Human).alive == 0)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text("Your eternity will be spent at"),
+                      Text(
+                        (Globals.currentUser as Human).destiny,
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
               ],
             ),
           ),

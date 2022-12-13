@@ -179,6 +179,29 @@ class UserServiceImpl implements UserService {
   }
 
   @override
+  Future<List<Quest>?> getAllHumanQuests() async {
+    try {
+      var route = "humans/quests";
+      var response = await http.get(
+          Uri.parse('${Globals.server}$route'   ),
+          headers: {
+            "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+                ?.jwt}",
+            "Accept": "application/json",
+          }
+      );
+      Map<String, dynamic> bodyAsJson = json.decode(response.body);
+      List<Quest> temp = (bodyAsJson["quests"] as List)
+          .map((quest) => Quest.fromJson(quest))
+          .toList();
+      return temp;
+    } catch(e){
+      e.hashCode;
+    }
+    return null;
+  }
+
+  @override
   Future<bool> assignQuest(Quest dropdownValueQuest, Human dropdownValueHuman, int dropdownValueQuestion, int amount) async {
     var quest = dropdownValueQuest.toJson();
     var human = dropdownValueQuestion == 0 ? dropdownValueHuman.toJsonQuest() : (Globals.currentUser as God).humans?.map((human){
@@ -282,5 +305,25 @@ class UserServiceImpl implements UserService {
       return true;
     }
     return false;
+  }
+  Future<bool?> resolveQuest(int id, String? answer) async {//{String? answer = null}????
+    var jsonBody = json.encode({
+      "id": id,
+      "answer": answer,
+    });
+    var route = "humans/quests";
+    var response = await http.post(
+        Uri.parse('${Globals.server}$route'),
+        body: jsonBody,
+        headers: {
+          "Authorization": "${Globals.currentUser?.type} ${Globals.currentUser
+              ?.jwt}",
+          "content-type": "application/json",
+        }
+    );
+    if (response.statusCode == 200){
+      return true;
+    }
+    return null;
   }
 }

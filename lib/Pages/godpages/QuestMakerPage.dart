@@ -111,7 +111,7 @@ class _QuestMakerPageState extends State<QuestMakerPage> {
                   children: [
                     TextButton(
                         onPressed:(){
-                          var quest = Quest(
+                          var quest = Quest.authQuest(
                               null,
                               int.parse(_destiny.text),
                               double.parse(_chance.text),

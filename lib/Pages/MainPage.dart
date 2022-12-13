@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../models/Const.dart';
+import '../models/users/humans/Human.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -155,21 +156,25 @@ class _MainPageState extends State<MainPage> {
   }
   List<Widget> loadHumanWidgets(){
     var widgetList = <Widget>[];
-    widgetList.add(
-        Column(
-          children:  [
-            TextButton(
-              onPressed: (){
-              },
-              child: const Text("Resolve quests",
-                  style: TextStyle(
-                    color: Colors.black,
-                  )
-              ),
-            )
-          ],
-        )
-    );
+    if ((Globals.currentUser as Human).alive != 0) {
+      widgetList.add(
+          Column(
+            children:  [
+              TextButton(
+                onPressed: (){
+                  context.go("/resolvequestpage");
+                },
+                child: const Text("Resolve quests",
+                    style: TextStyle(
+                      color: Colors.black,
+                    )
+                ),
+              )
+            ],
+          )
+      );
+    }
+
     widgetList.add(
         Column(
           children:  [
@@ -186,22 +191,6 @@ class _MainPageState extends State<MainPage> {
           ],
         )
     );
-    widgetList.add(
-        Column(
-          children:  [
-            TextButton(
-              onPressed: (){
-              },
-              child: const Text("Create Humans",
-                  style: TextStyle(
-                    color: Colors.black,
-                  )
-              ),
-            )
-          ],
-        )
-    );
-
     return widgetList;
   }
 

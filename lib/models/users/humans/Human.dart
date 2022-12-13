@@ -2,6 +2,7 @@ import 'package:idk/models/users/User.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../Const.dart';
+import '../../Quest.dart';
 
 part 'Human.g.dart';
 
@@ -18,6 +19,7 @@ class Human implements User{
   late String jwt;
   @override
   late String type;
+  late List<Quest>? quests;
 
   late int id;
 
@@ -35,11 +37,19 @@ class Human implements User{
 
   late int alive;
 
+  late String destiny;
+
   Human(this.name, this.email, this.password);
-  Human.authHuman(Human human, this.jwt, this.type, this.avatar, this.fate, this.wisdom, this.nobility, this.virtue, this.wickedness, this.audacity, this.alive){
+  Human.authHuman(Human human, this.jwt, this.type, this.avatar, this.fate, this.wisdom, this.nobility, this.virtue, this.wickedness, this.audacity, this.alive, this.destiny){
+    Globals.currentUser = this;
     name = human.name;
     email = human.email;
-    Globals.currentUser = this;
+    if ((Globals.currentUser as Human).alive != 0){
+      Globals.userServiceImpl.getAllQuests().then((value){
+        quests = value;
+      });
+    }
+
   }
 
   Human.toList(Human human,this.avatar, this.id) {
